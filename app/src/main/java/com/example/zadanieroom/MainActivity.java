@@ -19,10 +19,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     UzytkownicyDataBase uzytkownicyDataBase;
-    Button buttonDodaj;
+    Button buttonDodaj, buttonEdytuj;
     EditText editName, editSecondName, editEmail, editPhone;
 
-    ArrayList<Uzytkownik> uzytkownicy;
+    ArrayList<Uzytkownik> uzytkownicy = new ArrayList<>();
     ArrayAdapter<Uzytkownik> arrayAdapter;
     ListView listaUzytkownikow;
 
@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         editSecondName = findViewById(R.id.editSecondName);
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
+        listaUzytkownikow = findViewById(R.id.listView);
 
         buttonDodaj.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
                         uzytkownicyDataBase.zwrocWszystkichUzytkownikow().zwrocWszystkichUzytkownikow()
                 );
 
-                arrayAdapter = new ArrayAdapter<>(MainActivity.this, listaUzytkownikow);
+                arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, uzytkownicy);
 
                 listaUzytkownikow.setAdapter(arrayAdapter);
             }
         });
-
-
-
+        listaUzytkownikow.setOnItemLongClickListener();
     }
 }

@@ -58,4 +58,13 @@ public class Uzytkownik {
     public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
+
+    @Override
+    public String toString() {
+        return
+                imie + " " +
+                nazwisko + " | " +
+                email + " | " +
+                telefon;
+    }
 }
