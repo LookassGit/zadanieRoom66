@@ -2,6 +2,7 @@ package com.example.zadanieroom;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonDodaj, buttonEdytuj;
     EditText editName, editSecondName, editEmail, editPhone;
 
-    ArrayList<Uzytkownik> uzytkownicy = new ArrayList<>();
+    List<Uzytkownik> uzytkownicy = new ArrayList<>();
     ArrayAdapter<Uzytkownik> arrayAdapter;
     ListView listaUzytkownikow;
 
@@ -52,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
         listaUzytkownikow = findViewById(R.id.listView);
+        buttonEdytuj = findViewById(R.id.buttonEdytuj);
+
+        uzytkownicy = uzytkownicyDataBase.zwrocWszystkichUzytkownikow().zwrocWszystkichUzytkownikow();
+        arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, uzytkownicy);
+
+        listaUzytkownikow.setAdapter(arrayAdapter);
 
         buttonDodaj.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,16 +70,42 @@ public class MainActivity extends AppCompatActivity {
                         editPhone.getText().toString()
                 );
                 uzytkownicyDataBase.zwrocWszystkichUzytkownikow().wstawDoBazy(uzytkownik);
+                uzytkownicy.add(uzytkownik);
+                arrayAdapter.notifyDataSetChanged();
 
-                uzytkownicy = new ArrayList<>(
-                        uzytkownicyDataBase.zwrocWszystkichUzytkownikow().zwrocWszystkichUzytkownikow()
-                );
-
-                arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, uzytkownicy);
-
-                listaUzytkownikow.setAdapter(arrayAdapter);
             }
         });
-        listaUzytkownikow.setOnItemLongClickListener();
+        listaUzytkownikow.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                buttonEdytuj.setVisibility(View.VISIBLE);
+                Uzytkownik wybranyUzytkownik = uzytkownicy.get(i);
+                editName.setText(wybranyUzytkownik.getImie());
+                editSecondName.setText(wybranyUzytkownik.getNazwisko());
+                editEmail.setText(wybranyUzytkownik.getEmail());
+                editPhone.setText(wybranyUzytkownik.getTelefon());
+
+                buttonEdytuj.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        wybranyUzytkownik.setImie(editName.getText().toString());
+                        wybranyUzytkownik.setNazwisko(editSecondName.getText().toString());
+                        wybranyUzytkownik.setEmail(editEmail.getText().toString());
+                        wybranyUzytkownik.setTelefon(editPhone.getText().toString());
+
+                        editName.setText("");
+                        editSecondName.setText("");
+                        editEmail.setText("");
+                        editPhone.setText("");
+
+                        uzytkownicyDataBase.zwrocWszystkichUzytkownikow().aktualizujUzytkownikaWBazie(wybranyUzytkownik);
+                        arrayAdapter.notifyDataSetChanged();
+
+                        buttonEdytuj.setVisibility(View.INVISIBLE);
+                    }
+                });
+                return true;
+            }
+        });
     }
 }

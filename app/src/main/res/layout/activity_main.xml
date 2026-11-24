@@ -58,7 +58,9 @@
         android:id="@+id/buttonEdytuj"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Edytuj"
+        android:visibility="invisible"
+        />
 
     <ListView
         android:layout_width="match_parent"
