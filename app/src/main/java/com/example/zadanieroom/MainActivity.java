@@ -107,5 +107,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+       listaUzytkownikow.setOnItemClickListener(
+               new AdapterView.OnItemClickListener() {
+                   @Override
+                   public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                       Uzytkownik uzytkownikDoUsuniecia = uzytkownicy.get(i);
+
+                       uzytkownicy.remove(uzytkownikDoUsuniecia);
+                       uzytkownicyDataBase.zwrocWszystkichUzytkownikow().usunZBazy(uzytkownikDoUsuniecia);
+                       arrayAdapter.notifyDataSetChanged();
+                   }
+               }
+       );
     }
 }
